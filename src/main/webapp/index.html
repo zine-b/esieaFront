@@ -1,0 +1,80 @@
+<!DOCTYPE html>	
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style.css" /> <!-- Pour tout le monde -->
+        <title>Stock car</title>
+		<script src="stockcar.js"></script>
+    </head>
+	<body onload="javascript:afficherTableauListeVoitures()">
+		<div id="main">
+			<header>
+				<div id="logo">
+					<a href ="#" onclick="accueil()"><img src="logo.jpg"></a>
+				</div>
+				<div id="form">
+					<input id="saisieRecherche" type="text">
+					<button onclick="rechercher()">Rechercher</button>
+				</div>
+			</header>
+			<nav>
+				<ul>
+					<li><a href ="#" onclick="accueil()">Accueil</a></li>
+					<li><a href ="#" onclick="afficherFormulaireCreation()">Ajouter une voiture</a></li>
+				</ul>
+			</nav>
+			<div id="contenu">
+				<div id="conteneurSection">
+					<section id="recherche">
+						
+						<div id="listeVoiture">
+						
+						</div>
+					</section>
+					<section id="fiche">
+						<div id="infos">
+						</div>
+					</section>
+					<section id="nouvelle">
+						<form>
+							<div>
+						        <label for="marque">Marque :</label>
+						        <input type="text" id="marque" name="nvlle_marque">
+						    </div>
+						    <div>
+						        <label for="modele">Modèle :</label>
+						        <input type="text" id="modele" name="nvlle_modele">
+						    </div>
+						    <div>
+						        <label for="finition">Finition :</label>
+						        <input type="text" id="finition" name="nvlle_finition">
+						    </div>
+							<div>
+						        <label for="carburant">Carburant :</label>
+						        <input type="text" id="carburant" name="nvlle_carburant">
+						    </div>
+							<div>
+						        <label for="km">Kilométrage :</label>
+						        <input type="text" id="km" name="nvlle_km">
+						    </div>
+						    <div>
+						        <label for="annee">Année :</label>
+						        <input type="text" id="annee" name="nvlle_annee">
+						    </div>
+						    <div>
+						        <label for="prix">Prix :</label>
+						        <input type="text" id="prix" name="nvlle_prix">
+						    </div>
+						    <div id="divAjouter">
+						        <button id="nouvelleVoiture" name="nvlle_submit" onclick="ajouterVoiture()">Ajouter</button>
+						    </div>
+						</form>
+					</section>
+				</div>
+				<div class="snackbar vert" id="snackbar_ajout">La voiture a été ajoutée avec succès</div>
+				<div class="snackbar vert" id="snackbar_suppression">La voiture a été supprimée avec succès</div>
+				<div class="snackbar rouge" id="snackbar_erreur">Une erreur s'est produite</div>
+			</div>
+		</div>
+	</body>
+</html>

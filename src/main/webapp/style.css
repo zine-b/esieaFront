@@ -1,0 +1,202 @@
+section, header, nav {
+	/*border: 1px solid black;*/
+}
+
+body {
+	background: #f5f5fa;
+}
+
+header {
+	height: 133px;
+	background: #FFF;
+}
+nav {
+    float: left;
+    width: 20%;
+    font-family: Arial;
+    border-radius: 0;
+	color: #01987a;
+}
+nav li {
+	list-style:none;
+}
+nav a {
+	color: #01987a;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+div#logo {
+	width: 20%;
+	display: inline;
+}
+div#form {
+	/*border: 1px solid black;*/
+	margin-left: 20%;
+	padding-top: 40px;
+	float: right;
+	display: inline;
+}
+div#contenu {
+    margin-left: 20%;
+    width: 80%;
+}
+div#conteneurSection {
+	margin: 0 auto;
+	display: inline;
+	/*border: 1px solid black;*/
+}
+
+div#listeVoiture {
+	margin: auto;
+	height: 500px;
+}
+section#fiche {
+	border-top: 1px solid black;
+   padding-top : 30px;
+}
+
+div#infos {
+	width: 400px;
+	margin: auto;
+	/*border: 1px solid black;*/
+}
+
+div#contenuVoiture{
+	margin: auto;
+	width: 400px;
+	padding-left: 30px;
+}
+
+div#divSupprimer, div#divAjouter {
+	float : right;
+}
+
+span.infoVoiture {
+	margin-left : 5px;
+}
+
+section {
+   /* margin: 0 auto;*/
+}
+
+section#recherche {
+	
+}
+
+section#nouvelle {
+	display : none;
+}
+
+table {
+	border-collapse: collapse;
+	font-family: Arial;
+	border-bottom: 1px solid black;
+}
+
+table#listeVoitureTable {
+	margin: auto;
+}
+
+thead {
+	background-color : #01987a;
+	color: #FFF;
+	font-weight: bold;
+}
+tbody > tr:nth-child(even) {
+	background-color : #CED4E5; 
+}
+tbody > tr:nth-child(odd) {
+	background-color : #E8EBF5; 
+}
+td {
+	padding-left : 10px;
+	padding-right : 10px;
+	text-align : center;
+}
+
+form {
+  width: 800px;
+}
+
+form div + div {
+  margin-top: 1em;
+}
+
+label {
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+  font-weight: bold;
+}
+
+input, textarea {
+  font: 1em sans-serif;
+
+  width: 300px;
+  box-sizing: border-box;
+
+  border: 1px solid #999;
+}
+
+input:focus, textarea:focus {
+  border-color: #000;
+}
+
+.button {
+  padding-left: 90px; 
+}
+
+button {
+  margin-left: .5em;
+}
+
+div[id^="snack"] {
+	visibility: hidden; 
+  min-width: 250px; 
+  margin-left: -125px;
+  text-align: center; 
+  border-radius: 2px;
+  padding: 16px; 
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+}
+
+div.vert {
+	background-color: #f1f9f2;
+  color: #6abc4e;
+}
+
+div.rouge {
+	background-color: #fff3f7;
+  	color: #b24f4d;
+}
+
+div[id^="snack"].show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
