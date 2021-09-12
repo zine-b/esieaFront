@@ -12,11 +12,23 @@ function afficherTableauListeVoitures() {
 		    }
 		  })
 		  .then(function(value) {
-			  genererTableauListeVoitures(value);
+				genererTableauListeVoitures(value);
+				effacerFormulaire()
+				cacherFormulaireCreation()
 		  })
 		  .catch(function(err) {
 		    // Une erreur est survenue
 		  });
+}
+
+function effacerFormulaire() {
+	document.getElementById("marque").value = ""
+	document.getElementById("modele").value = ""
+	document.getElementById("finition").value = ""
+	document.getElementById("carburant").value = ""
+	document.getElementById("km").value = ""
+	document.getElementById("annee").value = ""
+	document.getElementById("prix").value = ""
 }
 
 function genererTableauListeVoitures(data) {
@@ -136,8 +148,13 @@ function rechercher() {
 
 function ajouterVoiture() {
 	var voiture = new Voiture();
-	voiture.marque = "Opel"
-	var json = JSON.stringify(voiture)
+	voiture.marque = document.getElementById("marque").value
+	voiture.modele = document.getElementById("modele").value
+	voiture.finition = document.getElementById("finition").value
+	voiture.carburant = document.getElementById("carburant").value
+	voiture.km = document.getElementById("km").value
+	voiture.annee = document.getElementById("annee").value
+	voiture.prix = document.getElementById("prix").value
 	fetch("http://localhost:8080/esieaBack/rest/voiture/add/", {
 		  method: 'POST',
 		  headers: {
@@ -153,6 +170,7 @@ function ajouterVoiture() {
 		  .then(function(value) {
 			if(value.succes) {
 			  	afficherSnackbar('snackbar_ajout');
+				afficherTableauListeVoitures();
 			}
 			else {
 				afficherSnackbar('snackbar_erreur');
@@ -172,7 +190,7 @@ function supprimerVoiture(id) {
 		  headers: {
 		    'Content-Type': 'application/json',
 		  },
-		  body: JSON.stringify(voiture),
+		  body: JSON.stringify(id),
 		})
 		  .then(function(res) {
 		    if (res.ok) {
@@ -183,6 +201,7 @@ function supprimerVoiture(id) {
 			if(value.succes) {
 			  	afficherSnackbar('snackbar_suppression');
 				document.getElementById('contenuVoiture').remove();
+				document.getElementById('divSupprimer').remove();
 				afficherTableauListeVoitures();
 			}
 			else {
@@ -196,21 +215,31 @@ function supprimerVoiture(id) {
 
 
 function afficherBlocVoiture(voiture) {
-	var v = JSON.parse(JSON.stringify(voiture));
+	var v = voiture[0]
+	console.log(v)
+	console.log(v.marque)
 
 	var root = document.getElementById('infos');
 	let labels = ['Marque : ', 'Modèle : ', 'Finition : ', 'Carburant : ', 'Kilométrage : ', 'Année : ', 'Prix : '];
-	let elems = ['marque', 'modele', 'finition', 'carburant', 'km', 'annee', 'prix'];
+	let elems = [];
 	
-	for (var key in voiture) {
-    if (voiture.hasOwnProperty(key)) {
-        console.log(key + " -> " + voiture[key]);
-    }
-}
+	elems[0] = v.marque;
+	elems[1] = v.modele;
+	elems[2] = v.finition;
+	var carb;
+	switch (v.carburant.char) {
+		case 'D' : carb = "Diesel"; break;
+		case 'E' : carb = "Essence"; break;
+		case 'H' : carb = "Hybride"; break;
+		default : carb = "Autre"; break;
+	}
+	elems[3] = carb
+	elems[4] = v.km;
+	elems[5] = v.annee;
+	elems[6] = v.prix;
 	var bloc = document.createElement('div');
 	bloc.setAttribute('id', 'contenuVoiture')
 	
-	var cpt = 0;
 	labels.forEach(function(item, index, array) {
 		var label = document.createElement('label');
 		label.innerHTML = item
@@ -218,8 +247,7 @@ function afficherBlocVoiture(voiture) {
 		
 		var span = document.createElement('span');
 		span.classList.add("infoVoiture");
-		console.log(elems[index])
-		span.innerHTML = voiture[elems[cpt]]
+		span.innerHTML = elems[index]
 		bloc.appendChild(span)
 		bloc.appendChild(document.createElement('br'))
 	});
@@ -228,15 +256,18 @@ function afficherBlocVoiture(voiture) {
 	if (contenuVoiture) {
 		contenuVoiture.remove()
 	}
+	var blocSupprimer = document.getElementById('divSupprimer');
+	if (blocSupprimer) {
+		blocSupprimer.remove()
+	}
 	root.appendChild(bloc)
 	var divBouton = document.createElement('div');
 	divBouton.setAttribute('id', 'divSupprimer')
 	var bouton = document.createElement('button');
 	bouton.innerHTML = 'Supprimer'
-	bouton.setAttribute('onclick', 'supprimerVoiture('+voiture.id+')')
+	bouton.setAttribute('onclick', 'supprimerVoiture('+v.id+')')
 	divBouton.appendChild(bouton)
 	root.appendChild(divBouton)
-	console.log(voiture)
 }
 
 function afficherFormulaireCreation() {
