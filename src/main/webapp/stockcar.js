@@ -1,3 +1,5 @@
+console.log(config.urlBack)
+
 function accueil() {
 	document.getElementById('saisieRecherche').value  = ""
 	cacherFormulaireCreation()
@@ -5,11 +7,13 @@ function accueil() {
 }
 
 function afficherTableauListeVoitures() {
-	fetch("http://localhost:8080/esieaBack/rest/voiture/get/all")
+	fetch(config.urlBack+ " /voiture/get/all")
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
-		    }
+		    } else {
+				afficherSnackbar('snackbar_erreur_api');
+			}
 		  })
 		  .then(function(value) {
 				genererTableauListeVoitures(value);
@@ -17,7 +21,7 @@ function afficherTableauListeVoitures() {
 				cacherFormulaireCreation()
 		  })
 		  .catch(function(err) {
-		    // Une erreur est survenue
+		    console.log("ERR")
 		  });
 }
 
@@ -114,11 +118,13 @@ function ajouterContenuListeVoitures(table, data) {
 }
 
 function afficherVoiture(id) {
-	fetch("http://localhost:8080/esieaBack/rest/voiture/get/"+id)
+	fetch(config.urlBack+ " + /voiture/get/"+id)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
-		    }
+		    } else {
+				afficherSnackbar('snackbar_erreur_api');
+			}
 		  })
 		  .then(function(value) {
 			  afficherBlocVoiture(value.voiture);
@@ -131,11 +137,13 @@ function afficherVoiture(id) {
 function rechercher() {
 	var saisie = document.getElementById('saisieRecherche').value;
 	if (saisie == '') { saisie = 'all'}
-	fetch("http://localhost:8080/esieaBack/rest/voiture/get/"+saisie)
+	fetch(config.urlBack+ " + /voiture/get/"+saisie)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
-		    }
+		    }else {
+				afficherSnackbar('snackbar_erreur_api');
+			}
 		  })
 		  .then(function(value) {
 				document.getElementById('listeVoitureTable').remove()
@@ -155,7 +163,7 @@ function ajouterVoiture() {
 	voiture.km = document.getElementById("km").value
 	voiture.annee = document.getElementById("annee").value
 	voiture.prix = document.getElementById("prix").value
-	fetch("http://localhost:8080/esieaBack/rest/voiture/add/", {
+	fetch(config.urlBack+ " + /voiture/add/", {
 		  method: 'POST',
 		  headers: {
 		    'Content-Type': 'application/json',
@@ -165,7 +173,9 @@ function ajouterVoiture() {
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
-		    }
+		    }else {
+				afficherSnackbar('snackbar_erreur_api');
+			}
 		  })
 		  .then(function(value) {
 			if(value.succes) {
@@ -185,7 +195,7 @@ function supprimerVoiture(id) {
 	var voiture = new Voiture();
 	voiture.id = id
 	var json = JSON.stringify(voiture)
-	fetch("http://localhost:8080/esieaBack/rest/voiture/del/", {
+	fetch(config.urlBack+ " + /voiture/del/", {
 		  method: 'POST',
 		  headers: {
 		    'Content-Type': 'application/json',
@@ -195,7 +205,9 @@ function supprimerVoiture(id) {
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
-		    }
+		    }else {
+				afficherSnackbar('snackbar_erreur_api');
+			}
 		  })
 		  .then(function(value) {
 			if(value.succes) {
