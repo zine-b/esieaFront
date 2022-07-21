@@ -1,13 +1,22 @@
 console.log(config.urlBack)
+var contexte;
 
 function accueil() {
 	document.getElementById('saisieRecherche').value  = ""
 	cacherFormulaireCreation()
-	afficherTableauListeVoitures()
+	afficherTableauListeVoitures(1)
 }
 
-function afficherTableauListeVoitures() {
-	fetch(config.urlBack+ " /voiture/get/all")
+function afficherTableauListeVoitures(mini) {
+	contexte = "TOUS";
+	if (!mini) {
+		if(document.querySelector("#pages a.active")) {
+			mini = (document.querySelector("#pages a.active").innerHTML - 1) * config.ligneParPage + 1;
+		} else {
+			mini = 1;
+		}
+	}
+	fetch(config.urlBack+ "/voiture/get/all/"+mini+"/"+config.ligneParPage)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
@@ -16,7 +25,7 @@ function afficherTableauListeVoitures() {
 			}
 		  })
 		  .then(function(value) {
-				genererTableauListeVoitures(value);
+				genererTableauListeVoitures(value, mini);
 				effacerFormulaire()
 				cacherFormulaireCreation()
 		  })
@@ -35,7 +44,7 @@ function effacerFormulaire() {
 	document.getElementById("prix").value = ""
 }
 
-function genererTableauListeVoitures(data) {
+function genererTableauListeVoitures(data, mini) {
 	var liste = document.getElementById('listeVoitureTable');
 	if (liste) {
 		liste.remove()
@@ -49,6 +58,8 @@ function genererTableauListeVoitures(data) {
 	
 	ajouterContenuListeVoitures(table, data)
 	root.appendChild(table);
+	
+	genererPagination(data.nbVoitures, calculerNbPages(mini));
 }
 
 function genererEntetesListeVoitures() {
@@ -67,8 +78,9 @@ function ajouterContenuListeVoitures(table, data) {
 	try {
 		console.log(data);
 		console.log(data.voitures)
-		var bagnoles = data.voitures
-		data.voitures.forEach(function(item, index, array) {
+		var tbody = document.createElement('tbody');
+		table.appendChild(tbody)
+		data.voitures.every(function(item, index, array) {
 			console.log("item => " + item);
 			var voiture = JSON.parse(item);
 			console.log(voiture)
@@ -110,7 +122,11 @@ function ajouterContenuListeVoitures(table, data) {
 			cell.appendChild(lien)
 			ligne.appendChild(cell)
 			
-			table.appendChild(ligne)
+			tbody.appendChild(ligne)
+			if (index+1 == config.ligneParPage) {
+				return false;
+			}
+			return true;
 	});
 	} catch (error) {
 		console.error(error);
@@ -118,7 +134,8 @@ function ajouterContenuListeVoitures(table, data) {
 }
 
 function afficherVoiture(id) {
-	fetch(config.urlBack+ " + /voiture/get/"+id)
+	contexte = "ID="+id
+	fetch(config.urlBack+ "/voiture/get/"+id+"/1/1")
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
@@ -137,7 +154,8 @@ function afficherVoiture(id) {
 function rechercher() {
 	var saisie = document.getElementById('saisieRecherche').value;
 	if (saisie == '') { saisie = 'all'}
-	fetch(config.urlBack+ " + /voiture/get/"+saisie)
+	contexte = "RECHERCHE="+saisie
+	fetch(config.urlBack+ "/voiture/get/"+saisie+"/1/"+config.ligneParPage)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
@@ -154,6 +172,20 @@ function rechercher() {
 		  });
 }
 
+function dispatchContexte(mini) {
+	if (contexte == "TOUS") {
+		afficherTableauListeVoitures(mini);
+	} else if (contexte.startsWith("ID")) {
+		afficherVoiture(contexte.substring(contexte.indexOf("=")));
+	} else if (contexte.startsWith("RECHERCHE")) {
+		rechercher(contexte.substring(contexte.indexOf("=")));
+	}
+}
+
+function paginer(active) {
+	var mini = (active-1) * config.ligneParPage + 1;
+	dispatchContexte(mini);
+}
 function ajouterVoiture() {
 	var voiture = new Voiture();
 	voiture.marque = document.getElementById("marque").value
@@ -195,7 +227,7 @@ function supprimerVoiture(id) {
 	var voiture = new Voiture();
 	voiture.id = id
 	var json = JSON.stringify(voiture)
-	fetch(config.urlBack+ " + /voiture/del/", {
+	fetch(config.urlBack+ "/voiture/del/", {
 		  method: 'POST',
 		  headers: {
 		    'Content-Type': 'application/json',
@@ -303,6 +335,70 @@ function afficherSnackbar(id) {
 
 
   setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+}
+
+function genererPagination(nbLignes, active) {
+	var nbPages = calculerNbPages(nbLignes);
+	
+	var pages = document.querySelector("div#pages");
+	if(pages) {
+		pages.remove();
+	}
+	var root = document.querySelector("div.pagination");
+	var divPages = document.createElement("div");
+	divPages.setAttribute('id', 'pages');
+	for (let i = 0; i < nbPages; i++) {
+		var lien = document.createElement('a');
+		lien.setAttribute('href', '#');
+		lien.setAttribute('onclick', 'paginer('+(i+1) + ')');
+		lien.setAttribute('value', (i+1));
+		lien.innerHTML = (i+1);
+		divPages.appendChild(lien);
+	}
+	var previous = document.querySelector("div.pagination a.previous");
+	var next_sib = previous.nextSibling;
+	if (next_sib) {
+  		root.insertBefore(divPages, next_sib);
+	}
+	else {
+		root.appendChild(divPages);
+	}
+	selectionnerPage(active, nbLignes);
+}
+
+function calculerNbPages(nbLignes) {
+	var nbPage = Math.trunc(nbLignes / config.ligneParPage);
+	if(nbLignes % config.ligneParPage != 0) {
+		nbPage = nbPage + 1;
+	}
+	return nbPage;
+}
+
+function selectionnerPage(numeroPage, nbLignes) {
+	var pages = document.querySelectorAll("div.pagination div#pages a");
+	var nbPages = pages.length;
+	pages.forEach(function(item, index, array) {
+		item.classList.remove('active');
+	});
+	document.querySelector("div#pages a[value='" + numeroPage + "']").classList.add('active');
+	if(numeroPage == 1) {
+		document.querySelector("div.pagination a.previous").classList.add('disabled');
+		document.querySelector("div.pagination a.previous").removeAttribute('href');
+	}
+	else if (nbPages > 1) {
+		document.querySelector("div.pagination a.previous").classList.remove('disabled');
+		document.querySelector("div.pagination a.previous").setAttribute('href', '#');
+		document.querySelector("div.pagination a.previous").setAttribute('onclick', 'paginer('+(numeroPage-1)+')');
+	}
+	if (numeroPage < nbPages) {
+		document.querySelector("div.pagination a.next").classList.remove('disabled');
+		document.querySelector("div.pagination a.next").setAttribute('href', '#');
+		document.querySelector("div.pagination a.next").setAttribute('onclick', 'paginer('+(numeroPage+1)+')');
+	}
+	else if (numeroPage == nbPages) {
+		document.querySelector("div.pagination a.next").classList.add('disabled');
+		document.querySelector("div.pagination a.next").removeAttribute('href');
+	}
 }
 
 class Voiture {
