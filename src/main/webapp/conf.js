@@ -1,5 +1,6 @@
 
 const config = {
-	urlBack: "http://localhost:8080/esieaBack/rest"
+	urlBack: "http://localhost:8080/esieaBack/rest",
+	ligneParPage : 10
 };
  
