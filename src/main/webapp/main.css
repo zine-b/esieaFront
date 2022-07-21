@@ -1641,8 +1641,12 @@ input, select, textarea {
 		width: 100%;
 	}
 
-		table tbody tr:nth-child(2n+2) {
-			background: #f4f4f4;
+		table tbody tr:nth-child(odd) {
+			background-color: #f4f4f4;
+		}
+		
+		table tbody tr:nth-child(odd) {
+			background-color: #f4f4f4;
 		}
 
 		table td {
@@ -1657,6 +1661,8 @@ input, select, textarea {
 
 		table thead {
 			border-bottom: solid 1px #ddd;
+			background: #c94663;
+			color: #eee;
 		}
 
 		table tfoot {
@@ -1870,20 +1876,20 @@ input, select, textarea {
 
 /* Pagination */
 
-	.pagination .pages {
+	.pagination #pages {
 		display: inline-block;
 		font-family: 'Open Sans Condensed', sans-serif;
 		font-weight: 700;
 	}
 
-		.pagination .pages span {
+		.pagination #pages span {
 			display: inline-block;
 			width: 1.5em;
 			text-align: center;
 			margin: 0 0.4em 0 0;
 		}
 
-		.pagination .pages a {
+		.pagination #pages a {
 			cursor: pointer;
 			display: inline-block;
 			text-align: center;
@@ -1900,11 +1906,11 @@ input, select, textarea {
 			box-shadow: inset 0 0.075em 0.25em 0 rgba(0, 0, 0, 0.1);
 		}
 
-			.pagination .pages a:hover {
+			.pagination #pages a:hover {
 				background-color: #dadada;
 			}
 
-			.pagination .pages a.active {
+			.pagination #pages a.active {
 				background-color: #364050;
 				color: #fff;
 				box-shadow: none;
@@ -2194,7 +2200,6 @@ input, select, textarea {
 		-webkit-flex-shrink: 0;
 		-ms-flex-shrink: 0;
 		flex-shrink: 0;
-		height : 100%;
 	}
 
 		#sidebar form input, #sidebar form select, #sidebar form textarea {
@@ -2370,7 +2375,7 @@ input, select, textarea {
 					margin-left: 0.2em;
 				}
 
-				.pagination .pages a {
+				.pagination #pages a {
 					width: 2.75em;
 					height: 2.75em;
 					line-height: 2.75em;
@@ -2381,6 +2386,12 @@ input, select, textarea {
 					padding-top: 0;
 					padding-bottom: 0;
 					line-height: 2.75em;
+				}
+				
+				.pagination .button.disabled {
+					background-color: #e8e8e8;
+					color: #364050;
+					cursor: default;
 				}
 
 		/* Box */
@@ -2717,7 +2728,7 @@ input, select, textarea {
 
 		/* Pagination */
 
-			.pagination .pages {
+			.pagination #pages {
 				display: none;
 			}
 
