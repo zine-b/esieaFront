@@ -16,7 +16,7 @@ function afficherTableauListeVoitures(mini) {
 			mini = 1;
 		}
 	}
-	fetch(config.urlBack+ "/voiture/get/all/"+mini+"/"+config.ligneParPage)
+	fetch(config.urlBack+ "/voiture/get/all/"+(mini-1)+"/"+config.ligneParPage)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
@@ -59,7 +59,7 @@ function genererTableauListeVoitures(data, mini) {
 	ajouterContenuListeVoitures(table, data)
 	root.appendChild(table);
 	
-	genererPagination(data.nbVoitures, calculerNbPages(mini));
+	genererPagination(data.volume, calculerNbPages(mini));
 }
 
 function genererEntetesListeVoitures() {
@@ -134,8 +134,9 @@ function ajouterContenuListeVoitures(table, data) {
 }
 
 function afficherVoiture(id) {
+	var ancienContexte = contexte
 	contexte = "ID="+id
-	fetch(config.urlBack+ "/voiture/get/"+id+"/1/1")
+	fetch(config.urlBack+ "/voiture/get/"+id)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
@@ -145,17 +146,18 @@ function afficherVoiture(id) {
 		  })
 		  .then(function(value) {
 			  afficherBlocVoiture(value.voiture);
+			  contexte = ancienContexte
 		  })
 		  .catch(function(err) {
 		    // Une erreur est survenue
 		  });
 }
 
-function rechercher() {
+function rechercher(mini) {
 	var saisie = document.getElementById('saisieRecherche').value;
 	if (saisie == '') { saisie = 'all'}
 	contexte = "RECHERCHE="+saisie
-	fetch(config.urlBack+ "/voiture/get/"+saisie+"/1/"+config.ligneParPage)
+	fetch(config.urlBack+ "/voiture/get/"+saisie+"/"+(mini-1)+"/"+config.ligneParPage)
 		  .then(function(res) {
 		    if (res.ok) {
 		      return res.json();
@@ -165,7 +167,7 @@ function rechercher() {
 		  })
 		  .then(function(value) {
 				document.getElementById('listeVoitureTable').remove()
-			  genererTableauListeVoitures(value);
+			  genererTableauListeVoitures(value, mini);
 		  })
 		  .catch(function(err) {
 		    // Une erreur est survenue
@@ -178,7 +180,7 @@ function dispatchContexte(mini) {
 	} else if (contexte.startsWith("ID")) {
 		afficherVoiture(contexte.substring(contexte.indexOf("=")));
 	} else if (contexte.startsWith("RECHERCHE")) {
-		rechercher(contexte.substring(contexte.indexOf("=")));
+		rechercher(mini);
 	}
 }
 
@@ -195,7 +197,7 @@ function ajouterVoiture() {
 	voiture.km = document.getElementById("km").value
 	voiture.annee = document.getElementById("annee").value
 	voiture.prix = document.getElementById("prix").value
-	fetch(config.urlBack+ " + /voiture/add/", {
+	fetch(config.urlBack+ "/voiture/add/", {
 		  method: 'POST',
 		  headers: {
 		    'Content-Type': 'application/json',
@@ -259,7 +261,7 @@ function supprimerVoiture(id) {
 
 
 function afficherBlocVoiture(voiture) {
-	var v = voiture[0]
+	var v = JSON.parse(voiture)
 	console.log(v)
 	console.log(v.marque)
 
@@ -319,6 +321,7 @@ function afficherFormulaireCreation() {
 	
 	document.getElementById('fiche').style.display = "none";
 	document.getElementById('recherche').style.display = "none";
+	document.querySelector('div.pagination').style.display = "none";
 }
 
 function cacherFormulaireCreation() {
@@ -326,6 +329,7 @@ function cacherFormulaireCreation() {
 	
 	document.getElementById('fiche').style.display = "block";
 	document.getElementById('recherche').style.display = "block";
+	document.querySelector('div.pagination').style.display = "block";
 }
 
 function afficherSnackbar(id) {
