@@ -77,16 +77,10 @@
 
 			<!-- Pagination -->
 				<div class="pagination">
-					<a href="#" class="button previous">Previous Page</a>
+					<a href="#" class="button previous disabled">Previous Page</a>
 					<div id="pages">
-						<a href="#" onclick="selectionnerPage(1)" value="1" class="active">1</a>
-						<a href="#" onclick="selectionnerPage(2)" value="2">2</a>
-						<a href="#" onclick="selectionnerPage(3)" value="3">3</a>
-						<a href="#" onclick="selectionnerPage(4)" value="4">4</a>
-						<span>&hellip;</span>
-						<a href="#" onclick="selectionnerPage(20)" value="20">20</a>
 					</div>
-					<a href="#" class="button next">Next Page</a>
+					<a href="#" class="button next disabled">Next Page</a>
 				</div>
 
 			</div>
@@ -108,7 +102,7 @@
 	
 			<!-- Search -->
 			<section class="box search">
-				<form action="javascript:rechercher()">
+				<form action="javascript:rechercher(1)">
 					<input type="text" id="saisieRecherche" class="text" name="search" placeholder="Rechercher" />
 					<button type="submit" class="rechercher button">Go</button>
 				</form>
