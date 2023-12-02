@@ -1,0 +1,15 @@
+{
+  "name": "esieafront",
+  "version": "1.0.0",
+  "description": "Ce projet contient le code de la partie Front du projet Stock Car. Il est composé de code HTML, CSS et JavaScript intéragissant avec la partie Back.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.6.0"
+  }
+}

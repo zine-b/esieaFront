@@ -1,0 +1,35 @@
+{
+  voitures: [
+    `{
+    "id": 1,
+    "marque": "Toyota",
+    "modele": "Camry",
+    "finition": "Sedan",
+    "carburant": "ESSENCE",
+    "km": 50000,
+    "annee": 2020,
+    "prix": 25000
+  }`,
+    `{
+    "id": 2,
+    "marque": "Honda",
+    "modele": "Civic",
+    "finition": "Hatchback",
+    "carburant": "HYBRIDE",
+    "km": 30000,
+    "annee": 2021,
+    "prix": 28000
+  }`,
+    `{
+    "id": 3,
+    "marque": "Ford",
+    "modele": "Fusion",
+    "finition": "Sedan",
+    "carburant": "DIESEL",
+    "km": 60000,
+    "annee": 2019,
+    "prix": 22000
+  }`,
+  ],
+  volume: 3,
+}
